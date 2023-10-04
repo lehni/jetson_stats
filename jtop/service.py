@@ -36,7 +36,7 @@ from .core.exceptions import JtopException
 from .core.common import get_key, get_var, get_uptime
 from .core.hardware import get_hardware, get_platform_variables
 from .core.command import Command
-from .core.config import Config
+from .core.config import Config, get_config_service
 from .core.timer_reader import TimerReader
 from .core.cpu import CPUService
 from .core.memory import MemoryService
@@ -111,10 +111,11 @@ def uninstall_service(name=JTOP_SERVICE_NAME):
 
 
 def install_service(package_root, copy, name=JTOP_SERVICE_NAME):
+    root = get_config_service("/local/jetson_stats/")
     logger.info("Install {name}".format(name=name))
     # Copy or link file
     service_install_path = '/etc/systemd/system/{name}'.format(name=name)
-    service_package_path = '{package_root}/services/{name}'.format(package_root=package_root, name=name)
+    service_package_path = '{root}/services/{name}'.format(root=root, name=name)
     # remove if exist file
     if os.path.isfile(service_install_path) or os.path.islink(service_install_path):
         logger.info(" - Remove old {path}".format(path=service_install_path))
